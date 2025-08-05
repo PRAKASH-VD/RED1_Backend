@@ -4,8 +4,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-export const adminMiddleware = async (req, res, next) => {
-  //const token = req.header("Authorization");
+export const agentMiddleware = async (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1]; // split('')[1] =>bearer token
 
   if (!token) {
@@ -14,14 +13,12 @@ export const adminMiddleware = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    //console.log("decoded", decoded);
     req.user = decoded;
-    //console.log("req.user", req.user);
     const user = await User.findById(req.user._id);
-    if (user.role === "admin") {
+    if (user.role === "agent") {
       next();
     } else {
-      res.status(404).json({ message: "Access Denied" });
+      res.status(404).json({ message: "Access Denied only for agents" });
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
