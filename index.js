@@ -5,6 +5,7 @@ import connectDB from "./Database/dbConfig.js";
 import authRoute from "./Routers/authRoute.js";
 import propertyRoute from "./Routers/propertyRoute.js";
 import cartRoute from "./Routers/cartRoutes.js";
+import bookingRoute from "./Routers/bookingRoute.js";
 
 
 dotenv.config();
@@ -24,6 +25,7 @@ app.get("/",(req,res)=>{
 app.use("/api/auth", authRoute);
 app.use("/api/property", propertyRoute);
 app.use("/api/cart", cartRoute);
+app.use("/api/booking", bookingRoute);
 
 const port=process.env.PORT || 4000;
 
