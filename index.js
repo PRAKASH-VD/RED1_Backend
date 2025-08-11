@@ -6,6 +6,7 @@ import authRoute from "./Routers/authRoute.js";
 import propertyRoute from "./Routers/propertyRoute.js";
 import cartRoute from "./Routers/cartRoutes.js";
 import bookingRoute from "./Routers/bookingRoute.js";
+import paymentRoute from "./Routers/paymentRoute.js";
 
 
 dotenv.config();
@@ -26,6 +27,7 @@ app.use("/api/auth", authRoute);
 app.use("/api/property", propertyRoute);
 app.use("/api/cart", cartRoute);
 app.use("/api/booking", bookingRoute);
+app.use("/api/payment", paymentRoute);
 
 const port=process.env.PORT || 4000;
 
