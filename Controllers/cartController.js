@@ -1,7 +1,5 @@
-import e from "cors";
 import Cart from "../Models/cartModel.js";
 import Property from "../Models/propertyModel.js";
-
 
 //add to cart
 
@@ -10,7 +8,7 @@ export const addToCart = async (req, res) => {
     const { propertyId, quantity } = req.body;
     const property = await Property.findById(propertyId);
     if (!property) {
-      return res.status(404).json({ message: "Propertyp not found" });
+      return res.status(404).json({ message: "Property not found" });
     }
     let cart = await Cart.findOne({ user: req.user._id });
     if (!cart) {
