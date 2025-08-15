@@ -24,10 +24,10 @@ app.get("/",(req,res)=>{
 });
 
 app.use("/api/auth", authRoute);
-app.use("/api/property", propertyRoute);
+app.use("/api/properties", propertyRoute);
 app.use("/api/cart", cartRoute);
 app.use("/api/booking", bookingRoute);
-app.use("/api/payment", paymentRoute);
+app.use("/api/payments", paymentRoute);
 
 const port=process.env.PORT || 4000;
 

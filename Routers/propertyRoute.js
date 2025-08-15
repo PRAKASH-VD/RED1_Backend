@@ -16,7 +16,7 @@ import { adminMiddleware } from "../Middlewares/adminMiddleware.js";
 
 const router = express.Router();
 router.post("/create",agentMiddleware, createProperty);
-router.get("/allproperties", getAllProperties);
+router.get("/getproperties", getAllProperties);
 router.put("/update/:id",adminMiddleware, updateProperty);
 router.delete("/delete/:id",adminMiddleware, deleteProperty);
 router.get("/byid/:id", getPropertyById);
