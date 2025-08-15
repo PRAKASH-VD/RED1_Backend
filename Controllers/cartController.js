@@ -25,7 +25,7 @@ export const addToCart = async (req, res) => {
     if (itemIndex > -1) {
       cart.items[itemIndex].quantity += quantity;
     } else {
-      cart.items.push({ property: propertyId, quantity: quantity });
+      cart.items.push({ property: propertyId, quantity: quantity , size: property.size });
     }
     cart.totalPrice += property.price * quantity;
     await cart.save();
@@ -34,10 +34,7 @@ export const addToCart = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
-
 // view cart
-
 export const viewCart = async (req, res) => {
   try {
     const cart = await Cart.findOne({ user: req.user._id }).populate(
