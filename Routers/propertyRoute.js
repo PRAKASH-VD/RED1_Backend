@@ -11,11 +11,11 @@ import {
   getPropertiesBySizeRange,
   getPropertiesByName,
 } from "../Controllers/propertyController.js";
-import { agentMiddleware } from "../Middlewares/agentMiddleware.js";
+// import { agentMiddleware } from "../Middlewares/agentMiddleware.js";
 import { adminMiddleware } from "../Middlewares/adminMiddleware.js";
 
 const router = express.Router();
-router.post("/create",agentMiddleware, createProperty);
+router.post("/create",adminMiddleware, createProperty);
 router.get("/getproperties", getAllProperties);
 router.put("/update/:id",adminMiddleware, updateProperty);
 router.delete("/delete/:id",adminMiddleware, deleteProperty);
