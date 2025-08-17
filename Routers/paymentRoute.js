@@ -1,12 +1,12 @@
 
 import express from "express";
 
-import { createChechout } from "../Controllers/paymentController.js";
+import { createCheckout } from "../Controllers/paymentController.js";
 
 
 const Router = express.Router();
 
-Router.post("/checkout", createChechout);
+Router.post("/checkout", createCheckout);
 
 
 export default Router;

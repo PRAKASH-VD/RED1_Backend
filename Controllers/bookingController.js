@@ -5,10 +5,10 @@ import sendEmail from "../Utils/mailer.js";
 export const placeBooking = async (req, res) => {
   try {
     const cart = await Cart.findOne({ user: req.user._id }).populate(
-      "products.property"
+      "items.property"
     );
 
-    if (!cart || cart.products.length === 0) {
+    if (!cart || cart.items.length === 0) {
       return res.status(400).json({ message: "Cart is empty or not found" });
     }
     const totalPrice = cart.items.reduce(
@@ -31,22 +31,22 @@ export const placeBooking = async (req, res) => {
 
     // Send confirmation email
 
-    try {
-      const emailContent = `
-      <h1>Booking Confirmation</h1>
-      <p>Thank you for your booking. Your total amount is ${totalPrice}.</p>
-      <p>Booking ID: ${booking._id}</p>
-    `;
-      const userMail = req.user.email;
-      await sendEmail(userMail, "Booking Confirmation", emailContent);
-    } catch (error) {
-      console.error("Email Sending Failed:", error.message);
+ try {
+      const userEmail = req.user.email;
+      await sendEmail(
+        userEmail,
+        "Booking Confirmation",
+        `Your booking of $${totalPrice} is confirmed!`
+      );
+    } catch (emailError) {
+      console.log("Email sending failed:", emailError.message);
     }
+
+    res.status(200).json({ message: "Booking Placed Successfully", booking });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
-
 //Get My Bookings
 export const getMyBookings = async (req, res) => {
   try {
