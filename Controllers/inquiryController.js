@@ -4,7 +4,7 @@ import sendEmail from "../Utils/mailer.js";
 export const createInquiry = async (req, res) => {
   try {
     const inquiry = new Inquiry({
-      property: req.body.property,   // ✅ matches frontend
+      property: req.body.property,   
       name: req.body.name,
       email: req.body.email,
       phone: req.body.phone,
