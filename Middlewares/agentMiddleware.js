@@ -5,22 +5,33 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export const agentMiddleware = async (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1]; // split('')[1] =>bearer token
-
-  if (!token) {
-    return res.status(404).json({ message: "Token Missing" });
-  }
-
   try {
+    const authHeader = req.headers.authorization;
+
+    // Check if header exists & follows Bearer scheme
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ message: "Authorization token missing or invalid" });
+    }
+
+    const token = authHeader.split(" ")[1];
+
+    // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded;
-    const user = await User.findById(req.user._id);
-    if (user.role === "agent") {
-      next();
-    } else {
-      res.status(404).json({ message: "Access Denied only for agents" });
+
+    // Ensure user still exists
+    const user = await User.findById(decoded._id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
+
+    // Check role
+    if (user.role !== "agent") {
+      return res.status(403).json({ message: "Access denied: Agents only" });
+    }
+
+    next();
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(401).json({ message: "Invalid or expired token", error: error.message });
   }
 };

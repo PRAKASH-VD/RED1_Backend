@@ -36,8 +36,8 @@ export const placeBooking = async (req, res) => {
       await sendEmail(
         userEmail,
         "Booking Confirmation",
-        `Your booking of $${totalPrice} is confirmed!`
-      );
+      `Hello ${req.user.name},\n\nYour booking for property ${propertyId} has been placed successfully.\nPayment Amount: ₹${amount}\nPayment Method: ${paymentMethod}\n\nThank you for choosing us!`
+    );
     } catch (emailError) {
       console.log("Email sending failed:", emailError.message);
     }
@@ -92,6 +92,20 @@ export const updateBookingStatus = async (req, res) => {
       message: "Booking status updated successfully",
       data: updateBooking,
     });
+
+ try {
+      const userEmail = req.user.email;
+      await sendEmail(
+        userEmail,
+        "Booking Status Update",
+      `Hello ${booking.user.name},\n\nYour booking for property "${booking.property.title}" has been updated to status: ${status}.\n\nThank you.`
+    );
+    } catch (emailError) {
+      console.log("Email sending failed:", emailError.message);
+    }
+
+
+
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
