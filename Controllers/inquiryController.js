@@ -2,22 +2,25 @@ import Inquiry from "../Models/inquiryModel.js";
 import sendEmail from "../Utils/mailer.js";
 
 export const createInquiry = async (req, res) => {
-  const { property, name, email, phone, message } = req.body;
-  const inquiry = await Inquiry.create({
-    property,
-    user: req.user?._id,
-    name,
-    email,
-    phone,
-    message,
-  });
-  await sendEmail(
-    process.env.SUPPORT_MAIL || process.env.PASS_MAIL,
-    "New Property Inquiry",
-    `Property: ${property}\nFrom: ${name} <${email}>\n${message}`
-  );
-  res.status(201).json({ message: "Inquiry submitted", data: inquiry });
+  try {
+    const inquiry = new Inquiry({
+      property: req.body.property,   // ✅ matches frontend
+      name: req.body.name,
+      email: req.body.email,
+      phone: req.body.phone,
+      message: req.body.message,
+      preferredDate: req.body.preferredDate,
+      preferredTime: req.body.preferredTime,
+      user: req.user?._id || null,
+    });
+
+    await inquiry.save();
+    res.status(201).json(inquiry);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
 };
+
 
 export const getMyInquiries = async (req, res) => {
   try {

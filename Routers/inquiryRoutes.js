@@ -1,10 +1,10 @@
 import express from "express";
 import { createInquiry, getMyInquiries } from "../Controllers/inquiryController.js";
-import { protect } from "../Middleware/authMiddleware.js";
+import { authMiddleware  } from "../Middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-router.post("/", protect, createInquiry); // create inquiry
-router.get("/my", protect, getMyInquiries); // get my inquiries
+router.post("/", authMiddleware, createInquiry); // create inquiry
+router.get("/my", authMiddleware, getMyInquiries); // get my inquiries
 
 export default router;
