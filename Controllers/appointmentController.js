@@ -46,6 +46,19 @@ export const createAppointment = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+export const getCustomerAppointments = async (req, res) => {
+  try {
+    const appointments = await Appointment.find({ user: req.user._id })
+      .populate("agent", "name email")
+      .populate("property", "title price")
+      .sort({ scheduledAt: 1 });
+
+    res.status(200).json({ success: true, data: appointments });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 
 // Customer: Get all my appointments
 export const getMyAppointments = async (req, res) => {
