@@ -1,25 +1,21 @@
 import mongoose from "mongoose";
 
-const  appointmentSchema = new mongoose.Schema({
-    user:{
-        type:mongoose.Schema.ObjectId,
-        ref:"Appointment",
-        required:true,
-    },
-  propertys: [
-    {
-      property: {
-        type: mongoose.Schema.ObjectId,
-        ref: "Property",
-        required: true,
-      },
-      quantity: {
-        type: Number,
-        required: true,
-        default: 1,
-      },
-    },
-  ],  
+const appointmentSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.ObjectId,
+    ref: "User", // customer
+    required: true,
+  },
+  property: {
+    type: mongoose.Schema.ObjectId,
+    ref: "Property",
+    required: true,
+  },
+  agent: {
+    type: mongoose.Schema.ObjectId,
+    ref: "User", // agent who owns the property
+    required: true,
+  },
   scheduledAt: {
     type: Date,
     required: true,
@@ -30,14 +26,13 @@ const  appointmentSchema = new mongoose.Schema({
   status: {
     type: String,
     enum: ["Pending", "Approved", "Cancelled"],
-    default: "pending",
-  },  
+    default: "Pending",
+  },
   createdAt: {
     type: Date,
     default: Date.now,
   },
+});
 
-})
-
-const Appointment=mongoose.model("Appointment",appointmentSchema);
+const Appointment = mongoose.model("Appointment", appointmentSchema);
 export default Appointment;
