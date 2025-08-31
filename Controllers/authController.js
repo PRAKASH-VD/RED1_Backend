@@ -10,13 +10,45 @@ dotenv.config();
 export const registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
+    // force default role to 'user' for public registration
+    const role = "user";
     const hashPassword = await bcrypt.hash(password, 10);
-    //console.log(hashPassword);
-    const newUser = new User({ name, email, password: hashPassword });
+    const existing = await User.findOne({ email });
+    if (existing) return res.status(400).json({ message: "Email already in use" });
+    const newUser = new User({ name, email, password: hashPassword, role });
     await newUser.save();
     res
       .status(200)
       .json({ message: "User Registered Successfully", data: newUser });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Admin-only: register user with explicit role (admin/agent/user)
+export const registerUserWithRole = async (req, res) => {
+  try {
+    const { name, email, password, role } = req.body;
+    if (!["admin", "agent", "user"].includes(role)) {
+      return res.status(400).json({ message: "Invalid role" });
+    }
+    const existing = await User.findOne({ email });
+    if (existing) return res.status(400).json({ message: "Email already in use" });
+    const hashPassword = await bcrypt.hash(password, 10);
+    const newUser = new User({ name, email, password: hashPassword, role });
+    await newUser.save();
+    res.status(200).json({ message: "User Registered Successfully", data: newUser });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Protected: get logged-in user's profile
+export const getProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select("-password");
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.status(200).json({ message: "Profile fetched", data: user });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

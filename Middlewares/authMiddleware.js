@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import User from "../Models/userModel.js";
 import dotenv from "dotenv";
+import { adminMiddleware } from "./adminMiddleware.js";
 
 dotenv.config();
 
@@ -21,3 +22,9 @@ export const authMiddleware = async (req, res, next) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// compatibility exports used across routers
+export const protect = authMiddleware;
+export const admin = adminMiddleware;
+// you can still import authMiddleware directly if preferred
+export default authMiddleware;

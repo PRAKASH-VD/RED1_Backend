@@ -7,7 +7,7 @@ import {
   updateAppointmentStatus,
   getCustomerAppointments
 } from "../Controllers/appointmentController.js";
-import { protect, admin } from "../Middleware/authMiddleware.js";
+import { protect, admin } from "../Middlewares/authMiddleware.js";
 
 const router = express.Router();
 

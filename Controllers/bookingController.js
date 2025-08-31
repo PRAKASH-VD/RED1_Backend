@@ -30,14 +30,17 @@ export const placeBooking = async (req, res) => {
     // await Cart.updateOne({ user: req.user._id }, { $set: { products: [] } });
 
     // Send confirmation email
-
- try {
+    try {
       const userEmail = req.user.email;
+      const propertyNames = cart.items.map(item => item.property.name).join(", ");
+      const amount = totalPrice;
+      const paymentMethod = "Not specified"; // Replace with actual value if available
+
       await sendEmail(
         userEmail,
         "Booking Confirmation",
-      `Hello ${req.user.name},\n\nYour booking for property ${propertyId} has been placed successfully.\nPayment Amount: ₹${amount}\nPayment Method: ${paymentMethod}\n\nThank you for choosing us!`
-    );
+        `Hello ${req.user.name},\n\nYour booking for properties: ${propertyNames} has been placed successfully.\nPayment Amount: ₹${amount}\nPayment Method: ${paymentMethod}\n\nThank you for choosing us!`
+      );
     } catch (emailError) {
       console.log("Email sending failed:", emailError.message);
     }
