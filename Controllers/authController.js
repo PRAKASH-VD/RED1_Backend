@@ -9,9 +9,9 @@ dotenv.config();
 //Register New User
 export const registerUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
-    // force default role to 'user' for public registration
-    const role = "user";
+    const { name, email, password, contact, age } = req.body;
+  // force default role to 'customer' for public registration
+  const role = "customer";
     const hashPassword = await bcrypt.hash(password, 10);
     const existing = await User.findOne({ email });
     if (existing) return res.status(400).json({ message: "Email already in use" });
@@ -26,6 +26,31 @@ export const registerUser = async (req, res) => {
 };
 
 // Admin-only: register user with explicit role (admin/agent/user)
+
+// Refresh Token Controller
+export const refreshToken = async (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+    if (!refreshToken) {
+      return res.status(401).json({ message: "Refresh token required" });
+    }
+    // Verify refresh token
+    jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, (err, user) => {
+      if (err) {
+        return res.status(403).json({ message: "Invalid refresh token" });
+      }
+      // Generate new access token
+      const accessToken = jwt.sign(
+        { _id: user._id, email: user.email, role: user.role },
+        process.env.JWT_SECRET,
+        { expiresIn: "15m" }
+      );
+      res.status(200).json({ accessToken });
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 export const registerUserWithRole = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
