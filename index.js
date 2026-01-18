@@ -9,6 +9,7 @@ import bookingRoute from "./Routers/bookingRoute.js";
 import paymentRoute from "./Routers/paymentRoute.js";
 import inquiryRoute from "./Routers/inquiryRoutes.js";
 import appointmentRoute from "./Routers/appointmentRoute.js";
+import userRoutes from "./Routers/userRoutes.js";
 
 dotenv.config();
 
@@ -31,10 +32,12 @@ app.use("/api/booking", bookingRoute);
 app.use("/api/payments", paymentRoute);
 app.use("/api/inquiries", inquiryRoute);
 app.use("/api/appointments", appointmentRoute);
+app.use("/api/users", userRoutes);
+app.use("/uploads", express.static("uploads"));
 
 
 
-const port=process.env.PORT || 4000;
+const port=process.env.PORT;
 
 app.listen(port,()=>{
         console.log(`Server is Running On Port ${port}`);

@@ -9,13 +9,12 @@ dotenv.config();
 //Register New User
 export const registerUser = async (req, res) => {
   try {
-    const { name, email, password, contact, age } = req.body;
-  // force default role to 'customer' for public registration
+    const { name, email, password, phone, age } = req.body;
   const role = "customer";
     const hashPassword = await bcrypt.hash(password, 10);
     const existing = await User.findOne({ email });
     if (existing) return res.status(400).json({ message: "Email already in use" });
-    const newUser = new User({ name, email, password: hashPassword, role });
+    const newUser = new User({ name, email, password: hashPassword, phone, age, role });
     await newUser.save();
     res
       .status(200)
@@ -25,7 +24,7 @@ export const registerUser = async (req, res) => {
   }
 };
 
-// Admin-only: register user with explicit role (admin/agent/user)
+
 
 // Refresh Token Controller
 export const refreshToken = async (req, res) => {
@@ -105,6 +104,14 @@ export const loginUser = async (req, res) => {
       message: "User LoggedIn Successfully",
       token: token,
       role: user.role,
+        data: {
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+    phone: user.phone,
+    age: user.age,
+    role: user.role,
+  },
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
