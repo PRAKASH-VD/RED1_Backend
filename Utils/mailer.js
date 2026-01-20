@@ -14,14 +14,14 @@ const transporter = nodemailer.createTransport({
 const sendEmail = async (to, subject, text) => {
   try {
     await transporter.sendMail({
-      from: process.env.PASS_MAIL,
+      from: `"RED1 Property Portal" <${process.env.PASS_MAIL}>`,
       to,
       subject,
       text,
     });
     console.log("✅ Email sent successfully");
   } catch (error) {
-    console.error("❌ Error sending email:", error.message);
+    console.error("❌ Email error:", error.message);
   }
 };
 
